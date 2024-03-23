@@ -1,9 +1,9 @@
 import Agenda from 'agenda';
 import 'dotenv/config';
 
-const host = process.env.DB_HOST;
-const port = process.env.DB_PORT;
-const db = process.env.DB_NAME;
+const host = process.env.DB_HOST || '127.0.0.1';
+const port = process.env.DB_PORT || '27017';
+const db = process.env.DB_NAME || 'AutoFlow';
 
 const mongoURI = `mongodb://${host}:${port}/${db}`;
 
