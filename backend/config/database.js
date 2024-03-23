@@ -3,9 +3,9 @@ import 'dotenv/config';
 
 class DBClient {
   constructor () {
-    const port = process.env.DB_PORT;
-    const host = process.env.DB_HOST;
-    const database = process.env.DB_NAME;
+    const port = process.env.DB_PORT || '27017';
+    const host = process.env.DB_HOST || '127.0.0.1';
+    const database = process.env.DB_NAME || 'AutoFlow';
 
     // Create the connection URI
     const mongoURI = `mongodb://${host}:${port}/${database}`;
@@ -24,12 +24,12 @@ class DBClient {
   }
 
   // Get this mongoDB client instance
-  async getMongoClient() {
+  async getMongoClient () {
     return await this.client;
   }
 
   // Close the mongoDB connection
-  close() {
+  close () {
     this.client.close();
     console.log('..disconnected from server');
   }
