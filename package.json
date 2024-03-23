@@ -1,0 +1,31 @@
+{
+  "name": "AutoFlow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "agenda": "^5.0.0",
+    "aws-sdk": "^2.1583.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "mongodb": "^6.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.3",
+    "@babel/preset-env": "^7.24.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-jest": "^27.9.0",
+    "nodemon": "^3.1.0"
+  }
+}
