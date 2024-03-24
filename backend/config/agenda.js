@@ -15,8 +15,6 @@ agenda.define('data', async (job) => {
   console.log('Logging a message from agendaJS:', new Date());
 });
 
-agenda.start();
-
 agenda.on('error', (err) => {
   console.error('Error with agenda:', err);
 });

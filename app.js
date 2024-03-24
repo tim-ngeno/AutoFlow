@@ -14,6 +14,7 @@ app.use('/api', taskRoutes);
 
 // Define and schedule agenda jobs
 agenda.on('ready', () => {
+  agenda.start();
   agenda.schedule('3 seconds', 'data');
 });
 
