@@ -1,166 +1,96 @@
 import dbClient from '../config/database.js';
-import { ObjectId } from 'mongodb';
+import Task from '../models/Task.js';
 
 const taskController = {
-  // Create a new task
-  async newTask(req, res) {
-    const {task, type} = req.body;
-    console.log(`New task created: ${task}`);
+  async newTask (req, res) {
+    const { task, type, schedule } = req.body;
+    console.log('New task created:', task);
 
     try {
-      const tasksCollection = await req.tasksCollection;
-      await tasksCollection.insertOne({
-        task,
-        type
-      });
+      const newTask = await Task.create({ task, type, schedule });
       res.status(201).json({
-        message: 'Task created successfully',
-        task
+        message: 'Created successfully!',
+        task: newTask
       });
-    } catch ( error ) {
-      console.error('Error creating new task:', error);
+    } catch (err) {
+      console.error('Error creating new task:', err);
       res.status(500).json({
         error: 'Failed to create new task'
       });
     }
   },
 
-  // Get all tasks
-  async getAllTasks(req, res) {
-    // Retrieve tasksCollection from req
+  async  getAllTasks (req, res) {
     try {
-      const tasksCollection = await req.tasksCollection;
-      const tasks = await tasksCollection.find({}).toArray();
-      if (!tasks) {
-        res.status(404).json({
-          error: 'No tasks found'
-        });
-        return;
-      }
-      const formattedTasks = tasks.map((task) => {
-        return {
-          id: task._id,
-          task: task.task,
-          type: task.type,
-          created_at: new Date().toISOString().replace('T', ' ').substr(0, 19)
-        };
-      });
-      res.status(200).json(formattedTasks);
-    } catch ( error ) {
-      console.error('Error fetching tasks:', error);
+      const tasks = await Task.find({});
+      res.status(200).json(tasks);
+    } catch (err) {
+      console.error('Error fetching tasks:', err);
       res.status(500).json({
         error: 'Failed to fetch tasks'
       });
     }
   },
 
-  // Get a specific task by ID
-  async getTaskById(req, res) {
+  async getTaskById (req, res) {
     try {
-      const {taskId} = req.params;
-      const tasksCollection = await req.tasksCollection;
-      const task = await tasksCollection.findOne({
-        _id: new ObjectId(taskId)
-      });
+      const { taskId } = req.params;
+      const task = await Task.findById(taskId);
       if (!task) {
         res.status(404).json({
-          error: 'Task ID not found'
+	  error: ' Task ID not found'
         });
         return;
       }
       res.status(200).json(task);
-    } catch ( error ) {
-      console.error('Error fetching task by ID:', error);
+    } catch (err) {
+      console.error('Error fetching task by ID:', err);
       res.status(500).json({
         error: 'Failed to fetch task by ID'
       });
     }
   },
 
-  // Update a task by ID
-  async updateTask(req, res) {
-    // Retrieve taskId and updatedTask from request body
+  async updateTask (req, res) {
     try {
-      const {taskId} = req.params;
-      const {task, type} = req.body;
-      const tasksCollection = await req.tasksCollection;
-
-      if (!taskId) {
-        res.status(404).json({
-          error: 'No task ID found'
-        });
-        return;
-      }
-      if (!task) {
-        res.status(400).json({
-          error: 'No task for update'
-        });
-        return;
-      }
-
-      // Check if taskId has a job assigned to it
-      const oldTask = await tasksCollection.findOne({
-        _id: new ObjectId(taskId)
-      });
-      if (!oldTask) {
-        res.status(404).json({
-          error: `No task found with id: ${taskId}`
-        });
-        return;
-      }
-
-      // Update the task
-      const result = await tasksCollection.updateOne(
-        {
-          _id: new ObjectId(taskId)
-        },
-        {
-          $set: {
-            task,
-            type
-          }
-        }
+      const { taskId } = req.params;
+      const { task, type, schedule } = req.body;
+      const updatedTask = await Task.findByIdAndUpdate(
+        taskId, { task, type, schedule }, { new: true }
       );
-
-      if (result.modifiedCount === 1) {
-        res.status(200).json({
-          message: 'Task update success!'
+      if (!updatedTask) {
+        res.status(400).json({
+	  error: 'Task ID not found'
         });
-      } else {
-        res.status(500).json({
-          error: 'Failed to update task'
-        });
+        return;
       }
-    } catch ( error ) {
-      console.error('Error updating task:', error);
+      res.status(200).json({
+        message: 'Update success!',
+        task: updatedTask
+      });
+    } catch (err) {
+      console.error('Error updating task:', err);
       res.status(500).json({
         error: 'Internal server error'
       });
     }
   },
 
-  // Delete a task
-  async deleteTask(req, res) {
+  async deleteTask (req, res) {
     try {
-      const {taskId} = req.params;
-      const tasksCollection = await req.tasksCollection;
-
-      // Delete the task
-      const result = await tasksCollection
-            .deleteOne({
-              _id: new ObjectId(taskId)
-            });
-      if (result.deletedCount === 1) {
-        res.status(200).json({
-          message: 'Task deleted successfully'
-        });
-      } else {
+      const { taskId } = req.params;
+      const deletedTask = await Task.findByIdAndDelete(taskId);
+      if (!deletedTask) {
         res.status(404).json({
-          error: 'Task ID not found'
+	  error: 'Task ID not found'
         });
+        return;
       }
-    } catch ( error ) {
-      console.error('Error deleting task:', error);
+      res.status(200).json({
+        message: 'Deleted successfully'
+      });
+    } catch (err) {
+      console.error('Error deleting task', err);
       res.status(500).json({
         error: 'Internal server error'
       });
