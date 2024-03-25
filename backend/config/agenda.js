@@ -15,6 +15,18 @@ agenda.define('data', async (job) => {
   console.log('Logging a message from agendaJS:', new Date());
 });
 
+agenda.define('backupDatabase', async (job) => {
+  console.log('Backup Database', job.attrs.data);
+});
+
+agenda.define('transferFile', async (job) => {
+  console.log('Transfer file', job.attrs.data);
+});
+
+agenda.define('notificationAlert', async (job) => {
+  console.log('Notification alert', job.attrs.data);
+});
+
 agenda.on('error', (err) => {
   console.error('Error with agenda:', err);
 });
