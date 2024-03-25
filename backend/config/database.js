@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 import 'dotenv/config';
 
 class DBClient {
@@ -10,28 +10,21 @@ class DBClient {
     // Create the connection URI
     const mongoURI = `mongodb://${host}:${port}/${database}`;
 
-    // Create client connection
-    this.client = new MongoClient(mongoURI);
-
-    // Handle connection to mongodb
-    this.client.connect((err) => {
-      if (err) {
-	      console.error('Mongodb connection error:', err);
-      } else {
-        console.log('MongoDB connection success...');
-      }
+    // Connect to mongoDB server
+    mongoose.connect(mongoURI);
+    this.connection = mongoose.connection;
+    this.connection.on('connected', () => {
+      console.log('MongoDB connected');
     });
-  }
-
-  // Get this mongoDB client instance
-  async getMongoClient () {
-    return await this.client;
+    this.connection.on('error', (error) => {
+      console.error('Mongo DB connection error', error);
+    });
   }
 
   // Close the mongoDB connection
   close () {
-    this.client.close();
-    console.log('..disconnected from server');
+    this.connection.close();
+    console.log('MongoDB connection close');
   }
 }
 
