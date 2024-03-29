@@ -1,12 +1,13 @@
+import 'dotenv/config';
 import scheduleJobs from './backend/controllers/jobController.js';
 import authRoutes from './backend/routes/authRoutes.js';
 import taskRoutes from './backend/routes/taskRoutes.js';
 import dbClient from './backend/config/database.js';
 import agenda from './backend/config/agenda.js';
+import logger from './backend/config/logger.js';
 import Task from './backend/models/Task.js';
 import inquirer from 'inquirer';
 import express from 'express';
-import 'dotenv/config';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -46,20 +47,21 @@ async function main () {
   try {
     const taskDetails = await promptForTaskDetails();
     const newTask = await Task.create(taskDetails);
-    console.log('Task created:', newTask);
+    logger.info('Task created:', newTask);
 
     // Reschedule all jobs after adding a new task
     await scheduleJobs();
   } catch (err) {
-    console.error('Error:', err);
+    logger.error('Error:', err);
   }
 }
 
 dbClient.connection.once('open', async () => {
-  console.log('MongoDB connection is open');
-  main();
+  logger.info('MongoDB ready to receive requests...');
+  // main();
+  await scheduleJobs();
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}...`);
+  logger.info(`Server running on port ${PORT}...`);
 });
