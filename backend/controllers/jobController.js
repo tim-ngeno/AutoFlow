@@ -2,15 +2,6 @@ import mailService from '../services/emailService.js';
 import taskHandler from '../services/taskService.js';
 import agenda from '../config/agenda.js';
 import Task from '../models/Task.js';
-// import Mailgun from 'mailgun.js';
-// import formData from 'form-data';
-
-// const apiKey = process.env.MAILGUN_API_KEY;
-// const domain = process.env.MAILGUN_DOMAIN;
-// const sender = process.env.SENDER_ADDRESS;
-
-// const mailgun = new Mailgun(formData);
-// const mg = mailgun.client({ username: 'api', key: apiKey });
 
 export default async function scheduleJobs () {
   try {
@@ -59,12 +50,6 @@ export default async function scheduleJobs () {
           agenda.define('notificationAlert', async (job) => {
 	    console.log('Notification alert data:', job.attrs.data);
 	    const { recipient, subject, text } = job.attrs.data.data.taskData;
-	    // await mg.messages.create(domain, {
-	    //   from: sender,
-	    //   to: recipient,
-	    //   subject,
-	    //   text
-	    // });
 	    await mailService.sendEmail(recipient, subject, text);
 	    console.log('Notification alert sent!');
           });
