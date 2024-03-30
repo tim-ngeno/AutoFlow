@@ -4,7 +4,6 @@ import dbClient from '../config/database.js';
 export default async function initializeMongoDB (req, res, next) {
   try {
     const mongoClient = await dbClient.connection;
-    // req.tasksCollection = await mongoClient.db().collection('tasks');
 
     // Check if the connection is ready
     if (mongoClient.readyState !== 1) {
