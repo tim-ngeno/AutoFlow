@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import scheduleJobs from './backend/controllers/jobController.js';
 import authRoutes from './backend/routes/authRoutes.js';
 import taskRoutes from './backend/routes/taskRoutes.js';
@@ -8,6 +7,7 @@ import logger from './backend/config/logger.js';
 import Task from './backend/models/Task.js';
 import inquirer from 'inquirer';
 import express from 'express';
+import 'dotenv/config';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
