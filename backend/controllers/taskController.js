@@ -1,22 +1,24 @@
+import scheduleJobs from '../controllers/jobController.js';
 import dbClient from '../config/database.js';
 import Task from '../models/Task.js';
 
 const taskController = {
-  async newTask (req, res) {
-    const { task, type, schedule } = req.body;
-    console.log('New task created:', task);
-
+  async createTask (req, res) {
     try {
-      const newTask = await Task.create({ task, type, schedule });
-      res.status(201).json({
-        message: 'Created successfully!',
-        task: newTask
+      const { task, type, schedule, taskData } = req.body;
+      const newTask = await Task.create({
+        task,
+        type,
+        schedule,
+        taskData
       });
+
+      console.log('New task created:', newTask);
+      res.status(201).json(newTask);
+      await scheduleJobs();
     } catch (err) {
-      console.error('Error creating new task:', err);
-      res.status(500).json({
-        error: 'Failed to create new task'
-      });
+      console.error('Creating new task failed:', err);
+      res.status(500).json({ error: 'Failed to create new task' });
     }
   },
 
@@ -54,9 +56,10 @@ const taskController = {
   async updateTask (req, res) {
     try {
       const { taskId } = req.params;
-      const { task, type, schedule } = req.body;
+      const { task, type, schedule, taskData } = req.body;
+
       const updatedTask = await Task.findByIdAndUpdate(
-        taskId, { task, type, schedule }, { new: true }
+        taskId, { task, type, schedule, taskData }, { new: true }
       );
       if (!updatedTask) {
         res.status(400).json({
@@ -68,6 +71,7 @@ const taskController = {
         message: 'Update success!',
         task: updatedTask
       });
+      await scheduleJobs();
     } catch (err) {
       console.error('Error updating task:', err);
       res.status(500).json({
@@ -79,6 +83,7 @@ const taskController = {
   async deleteTask (req, res) {
     try {
       const { taskId } = req.params;
+
       const deletedTask = await Task.findByIdAndDelete(taskId);
       if (!deletedTask) {
         res.status(404).json({
