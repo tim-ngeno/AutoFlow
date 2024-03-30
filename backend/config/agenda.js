@@ -4,7 +4,6 @@ import 'dotenv/config';
 const host = process.env.DB_HOST || '127.0.0.1';
 const port = process.env.DB_PORT || '27017';
 const db = process.env.DB_NAME || 'AutoFlow';
-
 const mongoURI = `mongodb://${host}:${port}/${db}`;
 
 const agenda = new Agenda(
@@ -12,19 +11,7 @@ const agenda = new Agenda(
 );
 
 agenda.define('data', async (job) => {
-  console.log('Logging a message from agendaJS:', new Date());
-});
-
-agenda.define('backupDatabase', async (job) => {
-  console.log('Backup Database', job.attrs.data);
-});
-
-agenda.define('transferFile', async (job) => {
-  console.log('Transfer file', job.attrs.data);
-});
-
-agenda.define('notificationAlert', async (job) => {
-  console.log('Notification alert', job.attrs.data);
+  console.log('Sanity check from AgendaJs:', new Date());
 });
 
 agenda.on('error', (err) => {
