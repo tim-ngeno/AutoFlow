@@ -1,6 +1,6 @@
 # AutoFlow: Effortless Task Automation
 
-AutoFlow is a comprehensive task automation tool designed to simplify and streamline the management of repetitive tasks such as data backups, file transfers, and server maintenance. AutoFlow allows users to create, schedule, and monitor automated tasks.
+AutoFlow is a comprehensive task automation tool designed to simplify and streamline the management of repetitive tasks such as database backups, file transfers, and getting timely notification alerts. AutoFlow allows users to create, schedule, and monitor automated tasks.
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -32,6 +32,8 @@ AutoFlow leverages the following technologies:
 - **Agenda**: A job scheduling library for Node.js.
 - **Winston**: A versatile logging library for Node.js.
 - **Mailgun**: An email service provider for sending notification alerts.
+  You can sign up for a mailgun account [here](https://signup.mailgun.com).
+  
 
 ## 4. Getting Started
 ### Installation
@@ -52,45 +54,103 @@ AutoFlow does not currently implement authentication. Ensure the server is runni
 Tasks can be managed via the provided API endpoints. Users can create, retrieve, update, and delete tasks using RESTful operations.
 
 ### API Endpoints
+Run `npm start` in one terminal to get the server running:
+```bash
+npm start
+
+> AutoFlow@1.0.0 start
+> nodemon app.js
+
+[nodemon] 3.1.0
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node app.js`
+info:    Server running on port 3000...
+MongoDB connected
+
+```
 #### GET /api/tasks
-- Retrieves a list of all tasks.
+- Retrieves a list of all tasks. The tasks are displayed as an array of JSON data.
+
 
 #### POST /api/tasks
 - Creates a new task.
+You can create a new task based on the predefined models [here](https://github.com/tim-ngeno/AutoFlow/blob/main/backend/models/Task.js).
+
+The models have 3 required attributes, and a timestamp for time of modification:
+
+- `task`: The name of your task.
+- `type`: The type of task you're creating. Currently the following types are supported (case-sensitive): `Database Backup`, `File Transfer`, `Notification Alert`.
+- `schedule`: The time period for when you want the job to be run.
+
 
 #### GET /api/tasks/:id
 - Retrieves a specific task by its ID.
 
+
 #### PUT /api/tasks/:id
-- Updates an existing task.
+- Updates an existing task. You can modify the parameters set here in the request body.
 
 #### DELETE /api/tasks/:id
-- Deletes a task by its ID.
+- Deletes a task by its ID. 
+
 
 ## 6. Examples
 ### Sample Requests
 #### Create a New Task
-```http
-POST /api/tasks
-Content-Type: application/json
+Example:
+```bash
+curl -X POST -H "Content-Type: application/json"   -d ' {
+    "task": "Database Backup Job",
+    "type": "Database Backup", 
+    "schedule": "5 seconds",
+    "taskData": {
+      "dbName": "Flow",
+      "compressionType": "gzip"
+    }
+  }'   localhost:3000/api/tasks; echo
 
-{
-  "task": "MongoDB Backup",
-  "type": "Database Backup",
-  "schedule": "every 1 day"
+```
+This returns a response on the server like so:
+```bash
+New task created: {
+  task: 'Database Backup Job',
+  type: 'Database Backup',
+  schedule: '5 seconds',
+  taskData: { dbName: 'Flow', compressionType: 'gzip' },
+  _id: new ObjectId('66082d1dba7ec311a731afef'),
+  modified_at: 2024-03-30T15:17:49.547Z,
+  __v: 0
 }
+
 ```
 
 #### Retrieve All Tasks
-```http
-GET /api/tasks
+```bash
+curl localhost:3000/api/tasks; echo
+```
+
+#### Retrieve a specific task by its ID
+```bash
+curl localhost:3000/api/tasks/66082d1dba7ec311a731afef; echo
+
+{"_id":"66082d1dba7ec311a731afef","task":"Database Backup Job","type":"Database Backup","schedule":"5 seconds","taskData":{"dbName":"Flow","compressionType":"gzip"},"modified_at":"2024-03-30T15:17:49.547Z","__v":0}
+
+```
+
+#### Delete a  task by its ID
+```bash
+curl -X DELETE localhost:3000/api/tasks/66082d1dba7ec311a731afef; echo
+
+{"message":"Deleted successfully"}
 ```
 
 ### Response Formats
 #### Success Response
 ```json
 {
-  "success": true,
+  "message": "success",
   "data": { ... }
 }
 ```
@@ -99,7 +159,6 @@ GET /api/tasks
 ```json
 {
   "error": "Error message"
-  "reason": "cause of error"
 }
 ```
 
