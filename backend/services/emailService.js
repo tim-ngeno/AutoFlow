@@ -1,34 +1,34 @@
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
-
-const mailgun = new Mailgun(formData);
-
-const domain = process.env.MAILGUN_DOMAIN;
-const apiKey = process.MAILGUN_API_KEY;
+import 'dotenv/config';
 
 class MailgunService {
-  constructor (apiKey, domain) {
-    this.mg = mailgun.client({ username: 'api', key: apiKey });
+  constructor () {
+    this.mailgun = new Mailgun(formData);
+    this.domain = process.env.MAILGUN_DOMAIN;
+    this.apiKey = process.env.MAILGUN_API_KEY;
+    this.sender = process.env.SENDER_ADDRESS;
+
+    this.mg = this.mailgun.client({ username: 'api', key: this.apiKey });
   }
 
-  sendEmail (from, to, subject, text) {
-    const emailData = {
-      from,
-      to: Array.isArray(to) ? to.join(',') : to,
-      subject,
-      text
-    };
-
-    return new Promise((resolve, reject) => {
-      this.mg.messages.create(domain, emailData, (err, body) => {
-        if (err) {
-	  reject(err);
-        } else {
-	  resolve(body);
-        }
+  async sendEmail (recipient, subject, message) {
+    console.log('Sending email...');
+    try {
+      // Send the email
+      await this.mg.messages.create(this.domain, {
+        from: this.sender,
+        to: recipient,
+        subject,
+        text: message
       });
-    });
+
+      console.log('Mail sent successfully!');
+    } catch (err) {
+      console.err('Unable to send mail:', err);
+    }
   }
 }
 
-export default MailgunService;
+const mailService = new MailgunService();
+export default mailService;
