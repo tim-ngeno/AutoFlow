@@ -1,6 +1,7 @@
 import mailService from '../services/emailService.js';
 import taskHandler from '../services/taskService.js';
 import agenda from '../config/agenda.js';
+import logger from '../config/logger.js';
 import Task from '../models/Task.js';
 
 export default async function scheduleJobs () {
@@ -30,7 +31,7 @@ export default async function scheduleJobs () {
 	    const compressionType = job.attrs.data.data.compressionType;
 	    await taskHandler.performDatabaseBackup(dbName, compressionType);
           });
-          await agenda.schedule(task.schedule, 'dbBackup', { data: task });
+          await schedulePeriod(task.schedule, 'dbBackup', task);
           break;
 
         case 'File Transfer':
@@ -42,7 +43,7 @@ export default async function scheduleJobs () {
 	    const { destination } = job.attrs.data.data.taskData;
 	    await taskHandler.performFileTransfer(source, destination);
           });
-          await agenda.schedule(task.schedule, 'fileTransfer', { data: task });
+          await schedulePeriod(task.schedule, 'fileTransfer', task);
           break;
 
         case 'Notification Alert':
@@ -53,8 +54,7 @@ export default async function scheduleJobs () {
 	    await mailService.sendEmail(recipient, subject, text);
 	    console.log('Notification alert sent!');
           });
-          await agenda.schedule(task.schedule, 'notificationAlert',
-			      { data: task });
+          await schedulePeriod(task.schedule, 'notificationAlert', task);
           break;
 
         default:
@@ -66,5 +66,15 @@ export default async function scheduleJobs () {
     agenda.start();
   } catch (err) {
     console.error('Error scheduling jobs from database:', err);
+  }
+}
+
+async function schedulePeriod (schedule, jobType, task) {
+  if (schedule.includes('every')) {
+    const [_, time] = schedule.split('every');
+    console.log(`Scheduling ${jobType} to run every ${time}`);
+    await agenda.every(time, jobType, { data: task });
+  } else {
+    console.log(`Scheduling ${jobType} to run once in ${schedule}`);
   }
 }
