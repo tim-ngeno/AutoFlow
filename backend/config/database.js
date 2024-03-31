@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
 import 'dotenv/config';
+import mongoose from 'mongoose';
+import logger from '../config/logger.js';
 
 class DBClient {
   constructor () {
@@ -14,7 +15,7 @@ class DBClient {
     mongoose.connect(mongoURI);
     this.connection = mongoose.connection;
     this.connection.on('connected', () => {
-      console.log('MongoDB connected');
+      logger.info('MongoDB connected');
     });
     this.connection.on('error', (error) => {
       console.error('Mongo DB connection error', error);
@@ -24,7 +25,7 @@ class DBClient {
   // Close the mongoDB connection
   close () {
     this.connection.close();
-    console.log('MongoDB connection close');
+    logger.info('MongoDB connection close');
   }
 }
 

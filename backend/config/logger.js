@@ -1,14 +1,25 @@
 import winston from 'winston';
 
+const { combine, cli, json, prettyPrint, timestamp } = winston.format;
+
 const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.cli()
+  format: combine(
+    cli()
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'autoflow.log' })
+    new winston.transports.File(
+      {
+        filename: 'autoflow.error.log',
+        level: 'error',
+        format: combine(
+	  json(),
+	  timestamp(),
+	  prettyPrint()
+        )
+      }
+    )
   ]
 });
 
