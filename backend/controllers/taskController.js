@@ -1,5 +1,6 @@
 import scheduleJobs from '../controllers/jobController.js';
 import dbClient from '../config/database.js';
+import logger from '../config/logger.js';
 import Task from '../models/Task.js';
 
 const taskController = {
@@ -17,7 +18,7 @@ const taskController = {
       res.status(201).json(newTask);
       await scheduleJobs();
     } catch (err) {
-      console.error('Creating new task failed:', err);
+      logger.error('Creating new task failed:', err);
       res.status(500).json({ error: 'Failed to create new task' });
     }
   },
@@ -27,7 +28,7 @@ const taskController = {
       const tasks = await Task.find({});
       res.status(200).json(tasks);
     } catch (err) {
-      console.error('Error fetching tasks:', err);
+      logger.error('Error fetching tasks:', err);
       res.status(500).json({
         error: 'Failed to fetch tasks'
       });
@@ -46,7 +47,7 @@ const taskController = {
       }
       res.status(200).json(task);
     } catch (err) {
-      console.error('Error fetching task by ID:', err);
+      logger.error('Error fetching task by ID:', err);
       res.status(500).json({
         error: 'Failed to fetch task by ID'
       });
@@ -73,7 +74,7 @@ const taskController = {
       });
       await scheduleJobs();
     } catch (err) {
-      console.error('Error updating task:', err);
+      logger.error('Error updating task:', err);
       res.status(500).json({
         error: 'Internal server error'
       });
@@ -95,7 +96,7 @@ const taskController = {
         message: 'Deleted successfully'
       });
     } catch (err) {
-      console.error('Error deleting task', err);
+      logger.error('Error deleting task', err);
       res.status(500).json({
         error: 'Internal server error'
       });

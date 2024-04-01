@@ -10,7 +10,7 @@ export default async function scheduleJobs () {
     const tasks = await Task.find({});
 
     if (tasks.length === 0) {
-      console.log('No scheduled jobs found');
+      logger.info('No scheduled jobs found');
       // Run a sanity check
       await agenda.schedule('now', 'data');
     }
@@ -19,14 +19,14 @@ export default async function scheduleJobs () {
     // await agenda.cancel();
 
     for (const task of tasks) {
-      console.log(`Processing task: ${task.task}, Type: ${task.type},` +
+      logger.info(`Processing task: ${task.task}, Type: ${task.type},` +
 		  ` Schedule: ${task.schedule}`);
       switch (task.type) {
         case 'Database Backup':
-          console.log('Scheduling database backup:', task.task);
+          logger.info('Scheduling database backup:', task.task);
           agenda.define('dbBackup', async (job) => {
-	    console.log('DataBase backup data:', job.attrs.data);
-	    console.log(job.attrs.data.data.taskData);
+	    logger.info('DataBase backup data:', job.attrs.data);
+	    logger.info(job.attrs.data.data.taskData);
 	    const dbName = job.attrs.data.data.taskData.dbName;
 	    const compressionType = job.attrs.data.data.compressionType;
 	    await taskHandler.performDatabaseBackup(dbName, compressionType);
@@ -35,10 +35,10 @@ export default async function scheduleJobs () {
           break;
 
         case 'File Transfer':
-          console.log('Scheduling file transfer:', task.task);
+          logger.info('Scheduling file transfer:', task.task);
           agenda.define('fileTransfer', async (job) => {
-	    console.log('File transfer job data:', job.attrs.data);
-	    console.log(job.attrs.data.data.taskData);
+	    logger.info('File transfer job data:', job.attrs.data);
+	    logger.info(job.attrs.data.data.taskData);
 	    const { source } = job.attrs.data.data.taskData;
 	    const { destination } = job.attrs.data.data.taskData;
 	    await taskHandler.performFileTransfer(source, destination);
@@ -47,35 +47,35 @@ export default async function scheduleJobs () {
           break;
 
         case 'Notification Alert':
-          console.log('Scheduling notification alert:', task.task);
+          logger.info('Scheduling notification alert:', task.task);
           agenda.define('notificationAlert', async (job) => {
-	    console.log('Notification alert data:', job.attrs.data);
+	    logger.info('Notification alert data:', job.attrs.data);
 	    const { recipient, subject, text } = job.attrs.data.data.taskData;
 	    await mailService.sendEmail(recipient, subject, text);
-	    console.log('Notification alert sent!');
+	    logger.info('Notification alert sent!');
           });
           await schedulePeriod(task.schedule, 'notificationAlert', task);
           break;
 
         default:
-          console.error(`Unknown task type: ${task.type}`);
+          logger.error(`Unknown task type: ${task.type}`);
       }
     }
 
     // Start agenda after scheduling all jobs
     agenda.start();
   } catch (err) {
-    console.error('Error scheduling jobs from database:', err);
+    logger.error('Error scheduling jobs from database:', err);
   }
 }
 
 async function schedulePeriod (schedule, jobType, task) {
   if (schedule.includes('every')) {
     const [_, time] = schedule.split('every');
-    console.log(`Scheduling ${jobType} to run every ${time}`);
+    logger.info(`Scheduling ${jobType} to run every ${time}`);
     await agenda.every(time, jobType, { data: task });
   } else {
-    console.log(`Scheduling ${jobType} to run once in ${schedule}`);
+    logger.info(`Scheduling ${jobType} to run once in ${schedule}`);
     await agenda.schedule(schedule, jobType, { data: task });
   }
 }
