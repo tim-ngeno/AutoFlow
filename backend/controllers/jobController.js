@@ -16,7 +16,7 @@ export default async function scheduleJobs () {
     }
 
     // Clear all existing jobs
-    await agenda.cancel();
+    // await agenda.cancel();
 
     for (const task of tasks) {
       console.log(`Processing task: ${task.task}, Type: ${task.type},` +
@@ -76,5 +76,6 @@ async function schedulePeriod (schedule, jobType, task) {
     await agenda.every(time, jobType, { data: task });
   } else {
     console.log(`Scheduling ${jobType} to run once in ${schedule}`);
+    await agenda.schedule(schedule, jobType, { data: task });
   }
 }
