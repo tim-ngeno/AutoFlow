@@ -1,4 +1,5 @@
 import dbClient from '../config/database.js';
+import logger from '../config/logger.js';
 import { spawn } from 'child_process';
 import { format } from 'date-fns';
 
@@ -15,14 +16,14 @@ const backupDatabase = async (dbName, compressionType = '--gzip') => {
       const dbList = await dbClient.connection.db.admin().listDatabases();
       const existingDbs = dbList.databases.map((db) => db.name);
       if (!existingDbs.includes(dbName)) {
-        console.error(`Database ${dbName} does not exist`);
+        logger.error(`Database ${dbName} does not exist`);
         return;
       }
 
       const currentTime = formattedTime();
       const backupFileName = `../${dbName}-backup-${currentTime}.gz`;
 
-      console.log('Starting database backup---', backupFileName);
+      logger.info('Starting database backup---', backupFileName);
 
       const backupProcess = spawn('mongodump', [
 	`--db=${dbName}`,
@@ -40,7 +41,7 @@ const backupDatabase = async (dbName, compressionType = '--gzip') => {
         } else if (signal) {
           reject(new Error('Backup terminated with signal: ${signal}'));
         } else {
-          console.log(`Database "${dbName}" backup success! Backup location:` +
+          logger.info(`Database "${dbName}" backup success! Backup location:` +
 		      ` ${backupFileName}`);
           resolve();
         }

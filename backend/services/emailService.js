@@ -1,3 +1,4 @@
+import logger from '../config/logger.js';
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import 'dotenv/config';
@@ -13,7 +14,7 @@ class MailgunService {
   }
 
   async sendEmail (recipient, subject, message) {
-    console.log('Sending email...');
+    logger.info('Sending email...');
     try {
       // Send the email
       await this.mg.messages.create(this.domain, {
@@ -23,7 +24,7 @@ class MailgunService {
         text: message
       });
 
-      console.log('Mail sent successfully!');
+      logger.info('Mail sent successfully!');
     } catch (err) {
       console.err('Unable to send mail:', err);
     }

@@ -19,12 +19,12 @@ const taskHandler = {
   performFileTransfer: async (source, destinationDir) => {
     try {
       if (!fs.existsSync(source) || source.length === 0) {
-        console.error(`Source file "${source}" does not exist`);
+        logger.error(`Source file "${source}" does not exist`);
         return;
       }
       // Check if the destination dir exists
       if (!fs.existsSync(destinationDir) || destinationDir.length === 0) {
-        console.error(`Destination file "${destinationDir}" does not exist`);
+        logger.error(`Destination file "${destinationDir}" does not exist`);
         return;
       }
 
@@ -36,8 +36,8 @@ const taskHandler = {
 
       // Copy file from source to destination
       fs.copyFileSync(source, destination);
-      console.log('Job completed successfully!');
-      console.log(`File transferred from "${source}" to "${destination}"`);
+      logger.info('Job completed successfully!');
+      logger.info(`File transferred from "${source}" to "${destination}"`);
     } catch (err) {
       logger.error(`Error performing file transfer: ${err.message}`);
     }
