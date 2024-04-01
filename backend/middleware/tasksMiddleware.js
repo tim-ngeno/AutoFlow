@@ -1,4 +1,5 @@
 import dbClient from '../config/database.js';
+import logger from '../config/logger.js';
 
 // Middleware function to initialize MongoDB client and get the tasks collection
 export default async function initializeMongoDB (req, res, next) {
