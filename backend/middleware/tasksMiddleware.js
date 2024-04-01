@@ -7,7 +7,7 @@ export default async function initializeMongoDB (req, res, next) {
 
     // Check if the connection is ready
     if (mongoClient.readyState !== 1) {
-      console.error('MongoDB connection is not ready');
+      logger.error('MongoDB connection is not ready');
       res.status(500).json({ error: 'MongoDB connection error' });
       return;
     }
@@ -15,7 +15,7 @@ export default async function initializeMongoDB (req, res, next) {
     req.tasksCollection = mongoClient.model('Task').collection;
     next();
   } catch (error) {
-    console.error('Error initializing MongoDB', error);
+    logger.error('Error initializing MongoDB', error);
     res.status(500).json({ error: 'MongoDB initialization error' });
   }
 }
