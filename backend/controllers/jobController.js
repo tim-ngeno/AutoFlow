@@ -12,11 +12,10 @@ export default async function scheduleJobs () {
     if (tasks.length === 0) {
       logger.info('No scheduled jobs found');
       // Run a sanity check
-      await agenda.schedule('now', 'data');
     }
 
     // Clear all existing jobs
-    // await agenda.cancel();
+    await agenda.cancel();
 
     for (const task of tasks) {
       logger.info(`Processing task: ${task.task}, Type: ${task.type},` +
@@ -25,8 +24,8 @@ export default async function scheduleJobs () {
         case 'Database Backup':
           logger.info('Scheduling database backup:', task.task);
           agenda.define('dbBackup', async (job) => {
-	    logger.info('DataBase backup data:', job.attrs.data);
-	    logger.info(job.attrs.data.data.taskData);
+	    console.log('DataBase backup data:', job.attrs.data);
+	    console.log(job.attrs.data.data.taskData);
 	    const dbName = job.attrs.data.data.taskData.dbName;
 	    const compressionType = job.attrs.data.data.compressionType;
 	    await taskHandler.performDatabaseBackup(dbName, compressionType);
@@ -35,10 +34,10 @@ export default async function scheduleJobs () {
           break;
 
         case 'File Transfer':
-          logger.info('Scheduling file transfer:', task.task);
+          console.log('Scheduling file transfer:', task.task);
           agenda.define('fileTransfer', async (job) => {
-	    logger.info('File transfer job data:', job.attrs.data);
-	    logger.info(job.attrs.data.data.taskData);
+	    console.log('File transfer job data:', job.attrs.data);
+	    console.log(job.attrs.data.data.taskData);
 	    const { source } = job.attrs.data.data.taskData;
 	    const { destination } = job.attrs.data.data.taskData;
 	    await taskHandler.performFileTransfer(source, destination);
@@ -49,10 +48,10 @@ export default async function scheduleJobs () {
         case 'Notification Alert':
           logger.info('Scheduling notification alert:', task.task);
           agenda.define('notificationAlert', async (job) => {
-	    logger.info('Notification alert data:', job.attrs.data);
+	    console.log('Notification alert data:', job.attrs.data);
 	    const { recipient, subject, text } = job.attrs.data.data.taskData;
 	    await mailService.sendEmail(recipient, subject, text);
-	    logger.info('Notification alert sent!');
+	    // logger.info('Notification alert sent!');
           });
           await schedulePeriod(task.schedule, 'notificationAlert', task);
           break;
