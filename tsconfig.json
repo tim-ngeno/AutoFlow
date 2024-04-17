@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 18",
+
+  "_version": "18.2.0",
+
+  "compilerOptions": {
+    "lib": ["es2023"],
+    "module": "node16",
+    "target": "es2022",
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node16"
+  },
+  "ts-node": {
+    "esm": true
+  },
+  "include": ["backend/**/*.ts"],
+  "exclude": ["node_modules"]
+}
