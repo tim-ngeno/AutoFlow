@@ -1,4 +1,3 @@
-// @ts-nocheck
 import scheduleJobs from '../controllers/jobController.js';
 import dbClient from '../config/database.js';
 import logger from '../config/logger.js';
