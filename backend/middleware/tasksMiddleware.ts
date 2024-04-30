@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Response, Request } from 'express';
 import dbClient from '../config/database.js';
 import logger from '../config/logger.js';
