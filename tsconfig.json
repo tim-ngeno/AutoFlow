@@ -18,6 +18,6 @@
   "ts-node": {
     "esm": true
   },
-  "include": ["backend/**/*.ts"],
+  "include": ["backend/**/*.ts", "tests/**/*"],
   "exclude": ["node_modules"]
 }
