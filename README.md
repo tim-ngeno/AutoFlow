@@ -19,7 +19,7 @@ AutoFlow is a comprehensive task automation tool designed to simplify and stream
 7. [Troubleshooting](#troubleshooting)
 
 ## 1. Introduction
-Welcome to the AutoFlow documentation! This guide provides an in-depth explanation of AutoFlow, a task scheduling and automation platform built on Node.js. 
+Welcome to the AutoFlow documentation! This guide provides an in-depth explanation of AutoFlow, a task scheduling and automation platform built on Node.js.
 
 ## 2. Project Overview
 AutoFlow is a Node.js-based application designed to automate various tasks such as database backups, file transfers, and notification alerts. It offers a RESTful API for task management and utilizes the Agenda library for job scheduling.
@@ -33,7 +33,7 @@ AutoFlow leverages the following technologies:
 - **Winston**: A versatile logging library for Node.js.
 - **Mailgun**: An email service provider for sending notification alerts.
   You can sign up for a mailgun account [here](https://signup.mailgun.com).
-  
+
 
 ## 4. Getting Started
 ### Installation
@@ -41,7 +41,7 @@ To run AutoFlow locally, follow these steps:
 1. Clone the AutoFlow repository from GitHub.
 2. Navigate to the project directory and install dependencies using `npm install`.
 3. Configure environment variables by creating a `.env` file based on `.env.example`.
-4. Start the server using `npm start`.
+4. Start the server using `npx tsx app.ts`.
 
 ### Configuration
 AutoFlow requires configuration for database connection, API keys, and other settings. Refer to the `.env.example` file for a template and adjust it according to your environment.
@@ -93,7 +93,7 @@ The models have 3 required attributes, and a timestamp for time of modification:
 - Updates an existing task. You can modify the parameters set here in the request body.
 
 #### DELETE /api/tasks/:id
-- Deletes a task by its ID. 
+- Deletes a task by its ID.
 
 
 ## 6. Examples
@@ -103,7 +103,7 @@ Example:
 ```bash
 curl -X POST -H "Content-Type: application/json"   -d ' {
     "task": "Database Backup Job",
-    "type": "Database Backup", 
+    "type": "Database Backup",
     "schedule": "5 seconds",
     "taskData": {
       "dbName": "Flow",
