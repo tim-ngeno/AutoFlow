@@ -1,77 +1,77 @@
-// @ts-nocheck
-import { expect } from 'chai';
-import scheduleJobs from '../backend/controllers/jobController.js';
-import Task from '../backend/models/Task.js';
-import { initialize } from './setup.js';
+import { describe, expect, test, beforeAll } from '@jest/globals';
+import scheduleJobs from '../backend/controllers/jobController';
+import Task from '../backend/models/Task';
+import { initialize } from './setup';
+
 const RECIPIENT = process.env.RECIPIENT_ADDRESS;
 
 // Before running any tests, initialize the database and other configurations
-before(async () => {
+beforeAll(async () => {
   await initialize();
 });
 
 describe('Scheduler', () => {
   describe('Database Backup Scheduled Task', () => {
-    it('should schedule database backup task correctly', async () => {
+    test('should schedule database backup task correctly', async () => {
       // Create a mock database backup task
       const task = await Task.create({
         task: 'Database Backup Test-Jobs',
         type: 'Database Backup',
         schedule: '5 seconds',
-        taskData: { dbName: 'Jobs', compressionType: 'gzip' }
+        taskData: { dbName: 'Jobs', compressionType: 'gzip' },
       });
 
       // Schedule the task
       await scheduleJobs();
 
       // Retrieve the scheduled task from the database
-      const scheduledTask = await Task.findOne(
-        { task: 'Database Backup Test-Jobs' }
-      );
+      const scheduledTask = await Task.findOne({
+        task: 'Database Backup Test-Jobs',
+      });
 
       // Assertion: Verify that the task is scheduled correctly
-      expect(scheduledTask).to.exist;
-      expect(scheduledTask.type).to.equal('Database Backup');
-      expect(scheduledTask.schedule).to.equal('5 seconds');
+      expect(scheduledTask).toBeDefined();
+      expect(scheduledTask?.type).toBe('Database Backup');
+      expect(scheduledTask?.schedule).toBe('5 seconds');
     });
   });
 
   describe('Database Backup Scheduled Task - Non-existent DB', () => {
-    it('should schedule database backup task correctly', async () => {
+    test('should schedule database backup task correctly', async () => {
       // Create a mock database backup task
       const task = await Task.create({
         task: 'Database Backup Test-Mock',
         type: 'Database Backup',
         schedule: '5 seconds',
-        taskData: { dbName: 'MockDB', compressionType: 'gzip' }
+        taskData: { dbName: 'MockDB', compressionType: 'gzip' },
       });
 
       // Schedule the task
       await scheduleJobs();
 
       // Retrieve the scheduled task from the database
-      const scheduledTask = await Task.findOne(
-        { task: 'Database Backup Test-Mock' }
-      );
+      const scheduledTask = await Task.findOne({
+        task: 'Database Backup Test-Mock',
+      });
 
       // Assertion: Verify that the task is scheduled correctly
-      expect(scheduledTask).to.exist;
-      expect(scheduledTask.type).to.equal('Database Backup');
-      expect(scheduledTask.schedule).to.equal('5 seconds');
+      expect(scheduledTask).toBeDefined();
+      expect(scheduledTask?.type).toBe('Database Backup');
+      expect(scheduledTask?.schedule).toBe('5 seconds');
     });
   });
 
   describe('File Transfer Scheduled Task', () => {
-    it('should schedule file transfer task correctly', async () => {
+    test('should schedule file transfer task correctly', async () => {
       // Create a mock file transfer task
       const task = await Task.create({
         task: 'File Transfer Job',
         type: 'File Transfer',
         schedule: '10 seconds',
         taskData: {
-	  source: '/home/tim/AutoFlow/README.md',
-	  destination: '/home/tim/'
-        }
+          source: '/home/tim/AutoFlow/README.md',
+          destination: '/home/tim/',
+        },
       });
 
       // Schedule the task
@@ -81,24 +81,24 @@ describe('Scheduler', () => {
       const scheduledTask = await Task.findOne({ task: 'File Transfer Job' });
 
       // Assertion: Verify that the task is scheduled correctly
-      expect(scheduledTask).to.exist;
-      expect(scheduledTask.type).to.equal('File Transfer');
-      expect(scheduledTask.schedule).to.equal('10 seconds');
+      expect(scheduledTask).toBeDefined();
+      expect(scheduledTask?.type).toBe('File Transfer');
+      expect(scheduledTask?.schedule).toBe('10 seconds');
     });
   });
 
   describe('Notification Alert Scheduled Task', () => {
-    it('should schedule notification alert task correctly', async () => {
+    test('should schedule notification alert task correctly', async () => {
       // Create a mock notification alert task
       const task = await Task.create({
         task: 'Notification Alert Job',
         type: 'Notification Alert',
         schedule: '15 seconds',
         taskData: {
-	  recipient: RECIPIENT,
-	  subject: 'Test Subject',
-	  text: 'Test Message'
-        }
+          recipient: RECIPIENT,
+          subject: 'Test Subject',
+          text: 'Test Message',
+        },
       });
 
       // Schedule the task
@@ -108,20 +108,20 @@ describe('Scheduler', () => {
       const scheduledTask = await Task.findOne({ task: 'Notification Alert Job' });
 
       // Assertion: Verify that the task is scheduled correctly
-      expect(scheduledTask).to.exist;
-      expect(scheduledTask.type).to.equal('Notification Alert');
-      expect(scheduledTask.schedule).to.equal('15 seconds');
+      expect(scheduledTask).toBeDefined();
+      expect(scheduledTask?.type).toBe('Notification Alert');
+      expect(scheduledTask?.schedule).toBe('15 seconds');
     });
   });
 
   describe('Invalid Task Type', () => {
-    it('should handle invalid task type gracefully', async () => {
+    test('should handle invalid task type gracefully', async () => {
       // Create a mock task with an invalid type
       const task = new Task({
         task: 'Invalid Task',
         type: 'Invalid Type',
         schedule: '20 seconds',
-        taskData: {}
+        taskData: {},
       });
 
       // Schedule the task
@@ -129,18 +129,18 @@ describe('Scheduler', () => {
 
       // Assertion: Verify that the task is not scheduled
       const scheduledTask = await Task.findOne({ task: 'Invalid Task' });
-      expect(scheduledTask).to.not.exist;
+      expect(scheduledTask).toBeNull();
     });
   });
 
   describe('Periodic Task Scheduling', () => {
-    it('should schedule periodic task correctly', async () => {
+    test('should schedule periodic task correctly', async () => {
       // Create a mock periodic task
       const task = await Task.create({
         task: 'Periodic Task',
         type: 'Database Backup',
         schedule: 'every 1 hour',
-        taskData: { dbName: 'MockDB', compressionType: 'gzip' }
+        taskData: { dbName: 'MockDB', compressionType: 'gzip' },
       });
 
       // Schedule the task
@@ -148,9 +148,9 @@ describe('Scheduler', () => {
 
       // Assertion: Verify that the task is scheduled correctly
       const scheduledTask = await Task.findOne({ task: 'Periodic Task' });
-      expect(scheduledTask).to.exist;
-      expect(scheduledTask.type).to.equal('Database Backup');
-      expect(scheduledTask.schedule).to.equal('every 1 hour');
+      expect(scheduledTask).toBeDefined();
+      expect(scheduledTask?.type).toBe('Database Backup');
+      expect(scheduledTask?.schedule).toBe('every 1 hour');
     });
   });
 });
