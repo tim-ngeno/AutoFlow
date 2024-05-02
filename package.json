@@ -2,11 +2,11 @@
   "name": "AutoFlow",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "type": "module",
   "scripts": {
     "start": "nodemon app.ts --esm",
-    "test": "mocha"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -29,17 +29,20 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.3",
-    "@babel/preset-env": "^7.24.0",
+    "@jest/globals": "^29.7.0",
     "@tsconfig/node18": "^18.2.4",
     "@types/express": "^4.17.21",
     "@types/inquirer": "^9.0.7",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.8",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-jest": "^27.9.0",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.0",
-    "ts-node": "^10.9.2"
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   }
 }
