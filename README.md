@@ -56,19 +56,10 @@ Tasks can be managed via the provided API endpoints. Users can create, retrieve,
 ### API Endpoints
 Run `npm start` in one terminal to get the server running:
 ```bash
-npm start
-
-> AutoFlow@1.0.0 start
-> nodemon app.js
-
-[nodemon] 3.1.0
-[nodemon] to restart at any time, enter `rs`
-[nodemon] watching path(s): *.*
-[nodemon] watching extensions: js,mjs,cjs,json
-[nodemon] starting `node app.js`
+npx tsx app.ts
 info:    Server running on port 3000...
-MongoDB connected
-
+info:    MongoDB connected
+info:    MongoDB ready to receive requests...
 ```
 #### GET /api/tasks
 - Retrieves a list of all tasks. The tasks are displayed as an array of JSON data.
