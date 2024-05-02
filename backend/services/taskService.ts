@@ -1,8 +1,8 @@
 import backupDatabase from '../tasks/databaseBackup.js';
 import logger from '../config/logger.js';
-import { Client } from 'basic-ftp';
+// import { Client } from 'basic-ftp';
 import path from 'path';
-import { SCPClient } from 'scp2';
+import { Client } from 'scp2';
 import fs from 'fs';
 import os from 'os';
 
@@ -58,7 +58,7 @@ const taskHandler = {
 
   performSCPFileTransfer: async (source: string, destination: string, scpConfig: ScpConfig): Promise<void> => {
     return new Promise((resolve, reject) => {
-      const scpClient = new SCPClient();
+      const scpClient = new Client();
       scpClient.send({
         file: source,
         host: scpConfig.host,
@@ -78,21 +78,21 @@ const taskHandler = {
     });
   },
 
-  performFTPFileTransfer: async (source: string, destination: string, ftpConfig: FtpConfig): Promise<void> => {
-    const client = new Client();
-    try {
-      await client.access(ftpConfig);
+  // performFTPFileTransfer: async (source: string, destination: string, ftpConfig: FtpConfig): Promise<void> => {
+  //   const client = new Client();
+  //   try {
+  //     await client.access(ftpConfig);
 
-      // Upload file to FTP server
-      await client.uploadFrom(source, destination);
-      logger.info(`File transferred via FTP from ${source} to ${destination}`);
-    } catch (err: unknown) {
-      logger.error(`Error transferrinf file via FTP: ${(err as Error).message}`);
-      throw err;
-    } finally {
-      await client.close();
-    }
-  }
+  //     // Upload file to FTP server
+  //     await client.uploadFrom(source, destination);
+  //     logger.info(`File transferred via FTP from ${source} to ${destination}`);
+  //   } catch (err: unknown) {
+  //     logger.error(`Error transferrinf file via FTP: ${(err as Error).message}`);
+  //     throw err;
+  //   } finally {
+  //     await client.close();
+  //   }
+  // }
 };
 
 export default taskHandler;
