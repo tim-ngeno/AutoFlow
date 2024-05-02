@@ -41,7 +41,7 @@ To run AutoFlow locally, follow these steps:
 1. Clone the AutoFlow repository from GitHub.
 2. Navigate to the project directory and install dependencies using `npm install`.
 3. Configure environment variables by creating a `.env` file based on `.env.example`.
-4. Start the server using `npx tsx app.ts`.
+4. Start the server using `npx tsx app.ts` or `npm start`.
 
 ### Configuration
 AutoFlow requires configuration for database connection, API keys, and other settings. Refer to the `.env.example` file for a template and adjust it according to your environment.
@@ -56,10 +56,15 @@ Tasks can be managed via the provided API endpoints. Users can create, retrieve,
 ### API Endpoints
 Run `npm start` in one terminal to get the server running:
 ```bash
-npx tsx app.ts
+npm start
+
+> AutoFlow@1.0.0 start
+> npx tsx app.ts
+
 info:    Server running on port 3000...
 info:    MongoDB connected
 info:    MongoDB ready to receive requests...
+info:    No scheduled jobs found
 ```
 #### GET /api/tasks
 - Retrieves a list of all tasks. The tasks are displayed as an array of JSON data.
