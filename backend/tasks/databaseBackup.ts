@@ -1,5 +1,5 @@
-import dbClient from '../config/database.js';
-import logger from '../config/logger.js';
+import dbClient from '../config/database';
+import logger from '../config/logger';
 import { spawn } from 'child_process';
 import { format } from 'date-fns';
 

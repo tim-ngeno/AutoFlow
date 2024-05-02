@@ -1,9 +1,9 @@
-import mailService from '../services/emailService.js';
-import taskHandler from '../services/taskService.js';
-import agenda from '../config/agenda.js';
+import mailService from '../services/emailService';
+import taskHandler from '../services/taskService';
+import agenda from '../config/agenda';
 import { Job } from 'agenda';
-import logger from '../config/logger.js';
-import Task from '../models/Task.js';
+import logger from '../config/logger';
+import Task from '../models/Task';
 
 // const [ Task, TaskInterface ] = TaskModule;
 

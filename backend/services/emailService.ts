@@ -1,4 +1,4 @@
-import logger from '../config/logger.js';
+import logger from '../config/logger';
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import 'dotenv/config';

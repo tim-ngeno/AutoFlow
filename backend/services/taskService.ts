@@ -1,5 +1,5 @@
-import backupDatabase from '../tasks/databaseBackup.js';
-import logger from '../config/logger.js';
+import backupDatabase from '../tasks/databaseBackup';
+import logger from '../config/logger';
 // import { Client } from 'basic-ftp';
 import path from 'path';
 import { Client } from 'scp2';

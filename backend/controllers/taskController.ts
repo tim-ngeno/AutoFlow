@@ -1,7 +1,7 @@
-import scheduleJobs from '../controllers/jobController.js';
-import dbClient from '../config/database.js';
-import logger from '../config/logger.js';
-import Task from '../models/Task.js';
+import scheduleJobs from '../controllers/jobController';
+import dbClient from '../config/database';
+import logger from '../config/logger';
+import Task from '../models/Task';
 
 const taskController = {
   async createTask (req, res) {

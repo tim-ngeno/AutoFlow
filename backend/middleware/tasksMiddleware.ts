@@ -1,8 +1,7 @@
-// @ts-nocheck
 import { Response, Request } from 'express';
-import dbClient from '../config/database.js';
-import logger from '../config/logger.js';
-import Task from '../models/Task.ts';
+import dbClient from '../config/database';
+import logger from '../config/logger';
+import Task from '../models/Task';
 
 // Middleware function to initialize MongoDB client and get the tasks collection
 export default async function initializeMongoDB (req: Request, res: Response, next: any) {

@@ -1,5 +1,5 @@
-import taskController from '../controllers/taskController.js';
-import initializeMongoDB from '../middleware/tasksMiddleware.js';
+import taskController from '../controllers/taskController';
+import initializeMongoDB from '../middleware/tasksMiddleware';
 import express from 'express';
 
 // Router handler

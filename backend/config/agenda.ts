@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 import _Agenda, { Job } from 'agenda';
-import logger from '../config/logger.js';
+import logger from '../config/logger';
 
 // Load environment variables
 config();

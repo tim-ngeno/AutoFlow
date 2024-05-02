@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import logger from '../config/logger.js';
+import logger from '../config/logger';
 
 interface DBConnectionOptions {
   port?: string;
