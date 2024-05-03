@@ -47,17 +47,39 @@ async function promptForTaskDetails(): Promise<TaskDetails> {
 ];
 
   const answers = await inquirer.prompt<TaskDetails>(questions);
+
+  if (answers.type === 'File Transfer') {
+    const fileTransferQuestions = [
+      {
+	type: 'input',
+	name: 'source',
+	message: 'Enter the source for file transfer:\n',
+      },
+      {
+	type: 'input',
+	name: 'destination',
+	message: 'Enter the destination for file transfer:\n',
+      }
+    ];
+
+    const fileTransferAnswers = await inquirer.prompt(fileTransferQuestions);
+    answers.taskData = fileTransferAnswers;
+  }
+
   return answers;
 }
 
-async function main(): Promise<void> {
+async function main(silentMode: boolean = false): Promise<void> {
   try {
-      const taskDetails: TaskDetails = await promptForTaskDetails();
-      const newTask = await Task.create(taskDetails);
-      logger.info('Task created:', newTask);
+    const taskDetails: TaskDetails = await promptForTaskDetails();
+    const newTask = await Task.create(taskDetails);
 
-      // Reschedule all jobs after adding a new task
-      await scheduleJobs();
+    if (!silentMode) {
+      logger.info('Task created:', newTask);
+    }
+
+    // Reschedule all jobs after adding a new task
+    await scheduleJobs();
   } catch (err) {
       logger.error('Error:', err);
   }
@@ -65,7 +87,7 @@ async function main(): Promise<void> {
 
 dbClient.connection.once('open', async () => {
   logger.info('MongoDB ready to receive requests...');
-  // main();
+  // await main(true);
   await scheduleJobs();
 });
 
