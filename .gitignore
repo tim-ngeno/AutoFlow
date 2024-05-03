@@ -1,4 +1,5 @@
 node_modules
 # Ignore JavaScript and source map files
 **/*.js
-**/*.js.map.env
+**/*.js.map
+.env
