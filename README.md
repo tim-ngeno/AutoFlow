@@ -24,6 +24,10 @@ Welcome to the AutoFlow documentation! This guide provides an in-depth explanati
 ## 2. Project Overview
 AutoFlow is a Node.js-based application designed to automate various tasks such as database backups, file transfers, and notification alerts. It offers a RESTful API for task management and utilizes the Agenda library for job scheduling.
 
+## Changes:
+- Rewritten in TypeScript: The AutoFlow project has been rewritten in TypeScript to improve code quality, maintainability, and type safety.
+- Testing Module Update: The testing module has been transitioned from Mocha to Jest for enhanced testing capabilities, improved performance, and parallel execution.
+
 ## 3. Technologies Used
 AutoFlow leverages the following technologies:
 - **Node.js**: A JavaScript runtime environment for server-side applications.
