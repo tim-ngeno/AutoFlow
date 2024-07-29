@@ -1,7 +1,7 @@
-import { describe, expect, test, beforeAll } from '@jest/globals';
+import { describe, expect, test, beforeAll, afterAll, beforeEach } from '@jest/globals';
 import scheduleJobs from '../backend/controllers/jobController';
 import Task from '../backend/models/Task';
-import { initialize } from './setup';
+import { initialize, closeDatabase, stopAgenda } from './setup';
 
 const RECIPIENT = process.env.RECIPIENT_ADDRESS;
 
@@ -9,6 +9,18 @@ const RECIPIENT = process.env.RECIPIENT_ADDRESS;
 beforeAll(async () => {
   await initialize();
 });
+
+// Clear the tasks collection before each test
+beforeEach(async () => {
+  await Task.deleteMany({});
+})
+
+// Close the database connection after all tests and cleanup
+afterAll(async () => {
+  await Task.deleteMany({});
+  await stopAgenda();
+  await closeDatabase();
+})
 
 describe('Scheduler', () => {
   describe('Database Backup Scheduled Task', () => {

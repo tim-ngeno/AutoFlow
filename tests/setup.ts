@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import agenda from '../backend/config/agenda.js';
-import dbClient from '../backend/config/database.js';
+import agenda from '../backend/config/agenda';
+import dbClient from '../backend/config/database';
 
 // Define initialization function
 export async function initialize () {
@@ -12,4 +12,14 @@ export async function initialize () {
 
   // Return a promise that resolves once everything is initialized
   return Promise.resolve();
+}
+
+export async function closeDatabase() {
+  // Close the mongodb connection using the dbClient
+  await dbClient.close();
+}
+
+export async function stopAgenda() {
+  // Stop the agenda scheduler
+  await agenda.stop();
 }
