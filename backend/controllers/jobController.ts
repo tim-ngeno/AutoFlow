@@ -73,8 +73,11 @@ export default async function scheduleJobs () {
 
 async function schedulePeriod (schedule: string, jobType: string, task) {
   if (schedule.includes('every')) {
-    const [_, time] = schedule.split('every');
+    const [_, time, timeString] = schedule.split('every');
     logger.info(`Scheduling ${jobType} to run every ${time}`);
+    setTimeout(async () => {
+      
+    }, time)
     await agenda.every(time, jobType, { data: task });
   } else {
     logger.info(`Scheduling ${jobType} to run once in ${schedule}`);
